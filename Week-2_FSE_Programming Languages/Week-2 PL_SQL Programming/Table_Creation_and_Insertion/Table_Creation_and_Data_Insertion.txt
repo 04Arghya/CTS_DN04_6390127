@@ -1,0 +1,129 @@
+
+CREATE TABLE Employees (
+    EmployeeID NUMBER PRIMARY KEY,
+    Name VARCHAR2(100),
+    Position VARCHAR2(50),
+    Salary NUMBER,
+    Department VARCHAR2(50),
+    HireDate DATE
+);
+
+-- Customers
+INSERT INTO CUSTOMERS (
+    CUSTOMERID,
+    NAME,
+    DOB,
+    BALANCE,
+    LASTMODIFIED
+) VALUES ( 1,
+           'John Doe',
+           TO_DATE('1985-05-15', 'YYYY-MM-DD'),
+           1000,
+           SYSDATE );
+
+INSERT INTO CUSTOMERS (
+    CUSTOMERID,
+    NAME,
+    DOB,
+    BALANCE,
+    LASTMODIFIED
+) VALUES ( 2,
+           'Jane Smith',
+           TO_DATE('1990-07-20', 'YYYY-MM-DD'),
+           1500,
+           SYSDATE );
+
+-- Accounts
+INSERT INTO ACCOUNTS (
+    ACCOUNTID,
+    CUSTOMERID,
+    ACCOUNTTYPE,
+    BALANCE,
+    LASTMODIFIED
+) VALUES ( 1,
+           1,
+           'Savings',
+           1000,
+           SYSDATE );
+
+INSERT INTO ACCOUNTS (
+    ACCOUNTID,
+    CUSTOMERID,
+    ACCOUNTTYPE,
+    BALANCE,
+    LASTMODIFIED
+) VALUES ( 2,
+           2,
+           'Checking',
+           1500,
+           SYSDATE );
+
+-- Transactions
+INSERT INTO TRANSACTIONS (
+    TRANSACTIONID,
+    ACCOUNTID,
+    TRANSACTIONDATE,
+    AMOUNT,
+    TRANSACTIONTYPE
+) VALUES ( 1,
+           1,
+           SYSDATE,
+           200,
+           'Deposit' );
+
+INSERT INTO TRANSACTIONS (
+    TRANSACTIONID,
+    ACCOUNTID,
+    TRANSACTIONDATE,
+    AMOUNT,
+    TRANSACTIONTYPE
+) VALUES ( 2,
+           2,
+           SYSDATE,
+           300,
+           'Withdrawal' );
+
+-- Loans
+INSERT INTO LOANS (
+    LOANID,
+    CUSTOMERID,
+    LOANAMOUNT,
+    INTERESTRATE,
+    STARTDATE,
+    ENDDATE
+) VALUES ( 1,
+           1,
+           5000,
+           5,
+           SYSDATE,
+           ADD_MONTHS(SYSDATE, 60) );
+
+-- Employees
+INSERT INTO EMPLOYEES (
+    EMPLOYEEID,
+    NAME,
+    POSITION,
+    SALARY,
+    DEPARTMENT,
+    HIREDATE
+) VALUES ( 1,
+           'Alice Johnson',
+           'Manager',
+           70000,
+           'HR',
+           TO_DATE('2015-06-15', 'YYYY-MM-DD') );
+
+INSERT INTO EMPLOYEES (
+    EMPLOYEEID,
+    NAME,
+    POSITION,
+    SALARY,
+    DEPARTMENT,
+    HIREDATE
+) VALUES ( 2,
+           'Bob Brown',
+           'Developer',
+           60000,
+           'IT',
+           TO_DATE('2017-03-20', 'YYYY-MM-DD') );
+           SET SERVEROUTPUT ON;

@@ -1,0 +1,113 @@
+
+
+/*
+Exercise 1: Control Structures
+
+Scenario 1: The bank wants to apply a discount to loan interest rates for customers above 60 years old.
+        ? Question: Write a PL/SQL block that loops through all customers, checks their age, 
+           and if they are above 60, apply a 1% discount to their current loan interest rates.
+Scenario 2: A customer can be promoted to VIP status based on their balance.
+        ? Question: Write a PL/SQL block that iterates through all customers and sets a flag IsVIP to TRUE 
+           for those with a balance over $10,000.
+Scenario 3: The bank wants to send reminders to customers whose loans are due within the next 30 days.
+        ? Question: Write a PL/SQL block that fetches all loans due in the next 30 days and prints a reminder 
+            message for each customer.
+
+
+*/
+
+--Scenario1:
+SET SERVEROUTPUT ON;
+
+DECLARE
+  match_count INTEGER := 0;
+BEGIN
+  FOR rec IN (
+    SELECT l.LoanID, c.Name, c.DOB, l.InterestRate
+    FROM Loans l
+    JOIN Customers c ON l.CustomerID = c.CustomerID
+    WHERE MONTHS_BETWEEN(SYSDATE, c.DOB)/12 > 60
+  )
+  LOOP
+    -- Update interest rate
+    UPDATE Loans
+    SET InterestRate = InterestRate - 1
+    WHERE LoanID = rec.LoanID;
+
+    -- Output confirmation
+    DBMS_OUTPUT.PUT_LINE(
+      '1% discount applied to ' || rec.Name ||
+      ' (DOB: ' || TO_CHAR(rec.DOB, 'YYYY-MM-DD') || ')' ||
+      ', Loan ID: ' || rec.LoanID ||
+      ', New Interest Rate: ' || TO_CHAR(rec.InterestRate - 1)
+    );
+
+    match_count := match_count + 1;
+  END LOOP;
+
+  -- Show a message if no matching customer found
+  IF match_count = 0 THEN
+    DBMS_OUTPUT.PUT_LINE('No customers found with age over 60 therefore no discounts applied.');
+  END IF;
+
+  COMMIT;
+END;
+
+
+--Scenario2
+ALTER TABLE Customers ADD IsVIP CHAR(1);
+
+
+
+SET SERVEROUTPUT ON;
+
+BEGIN
+  FOR rec IN (
+    SELECT CustomerID, Name, Balance
+    FROM Customers
+  )
+  LOOP
+    IF rec.Balance > 10000 THEN
+      UPDATE Customers
+      SET IsVIP = 'Y'
+      WHERE CustomerID = rec.CustomerID;
+
+      DBMS_OUTPUT.PUT_LINE('Customer ' || rec.Name || ' (ID: ' || rec.CustomerID || ') is promoted to VIP.');
+    ELSE
+      UPDATE Customers
+      SET IsVIP = 'N'
+      WHERE CustomerID = rec.CustomerID;
+
+      DBMS_OUTPUT.PUT_LINE('Customer ' || rec.Name || ' (ID: ' || rec.CustomerID || ') is not eligible for VIP.');
+    END IF;
+  END LOOP;
+
+  COMMIT;
+END;
+
+--Scenario3
+SET SERVEROUTPUT ON;
+
+DECLARE
+  due_count INTEGER := 0;
+BEGIN
+  FOR rec IN (
+    SELECT l.LoanID, l.EndDate, c.Name, c.CustomerID
+    FROM Loans l
+    JOIN Customers c ON l.CustomerID = c.CustomerID
+    WHERE l.EndDate BETWEEN SYSDATE AND SYSDATE + 30
+  )
+  LOOP
+    DBMS_OUTPUT.PUT_LINE(
+      'Reminder: Loan ID ' || rec.LoanID || 
+      ' for customer ' || rec.Name || 
+      ' (ID: ' || rec.CustomerID || 
+      ') is due on ' || TO_CHAR(rec.EndDate, 'YYYY-MM-DD')
+    );
+    due_count := due_count + 1;
+  END LOOP;
+
+  IF due_count = 0 THEN
+    DBMS_OUTPUT.PUT_LINE('No loans due in the next 30 days.');
+  END IF;
+END;
