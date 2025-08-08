@@ -15,7 +15,7 @@ This repository contains my hands-on solutions for the **Digital Nurture 4.0 –
 - **Module 7 - Spring REST using Spring Boot 3** -- Week 4
 - **Module 8 - Microservices with Spring Boot 3 and Spring Cloud** -- Week 5
 - **Module 9-  Single Page Application framework - React** -- Week 6 & 7
-- **Module 11- Version Control - Git** -- Week 6 & 7
+- **Module 11- Version Control - Git** -- Week 8
 
 ---
 
